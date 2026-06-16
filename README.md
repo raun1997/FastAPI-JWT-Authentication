@@ -4,6 +4,7 @@
 Fire up your command prompt/terminal and type
 
 ```powershell
+cd FastAPI-JWT-Authentication
 python -m venv fastapienv
 fastapienv\Scripts\activate                        # on Windows
 source fastapienv/bin/activate                      # on macOs
