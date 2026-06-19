@@ -2,7 +2,7 @@ from passlib.context import CryptContext
 import os 
 from datetime import datetime, timedelta
 from typing import Union, Any
-from jose import jwt
+from jose import jwt, JWTError
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,8 +10,8 @@ load_dotenv()
 ACCESS_TOKEN_EXPIRE_MINUTES = 30 # 30 minutes
 REFRESH_TOKEN_EXPIRE_MINUTES = 60 *24 * 7 # 7 days 
 ALGORITHM = "HS256"
-SECRET_KEY = os.getenv('JWT_SECRET_KEY')   # should be kept secret
-REFRESH_SECRET_KEY = os.getenv('JWT_REFRESH_SECRET_KEY')   # should be kept secret
+SECRET_KEY = os.getenv('JWT_SECRET_KEY')    # should be kept secret
+REFRESH_SECRET_KEY = os.getenv('JWT_REFRESH_SECRET_KEY')    # should be kept secret
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -48,3 +48,21 @@ def create_refresh_token(subject: Union[str, Any], expires_delta: int = None) ->
     to_encode = {"exp": expires_delta, "sub": str(subject)}
     encoded_jwt = jwt.encode(to_encode, REFRESH_SECRET_KEY, ALGORITHM)
     return encoded_jwt
+
+from jose import JWTError, jwt
+
+def decode_token(token: str):
+    try:
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=["HS256"]
+        )
+
+        return payload
+
+    except JWTError:
+        return None
+
+# print(SECRET_KEY)     # debugging
+# print(REFRESH_SECRET_KEY)

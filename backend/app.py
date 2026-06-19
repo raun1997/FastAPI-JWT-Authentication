@@ -1,14 +1,14 @@
 from fastapi import FastAPI, status, HTTPException, Depends
 from fastapi.responses import RedirectResponse
-from app.schemas import UserOut, UserAuth, TokenSchema
+from .schemas import UserOut, UserAuth, TokenSchema
 from fastapi.security import OAuth2PasswordRequestForm
-from app.utils import (
+from .utils import (
     get_hashed_password,
     create_access_token,
     create_refresh_token,
     verify_password
 )
-
+# from .deps import get_current_user
 from uuid import uuid4 
 
 app = FastAPI()
@@ -17,8 +17,7 @@ users_db = {}
 @app.post('/signup', summary="Create new user", response_model=UserOut)
 async def create_user(data: UserAuth):
     # querying database to check if user already exist
-    user = users_db.get(data.email, None)
-    if user is not None:
+    if data.username in users_db:
             raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User with this email already exist"
@@ -29,7 +28,7 @@ async def create_user(data: UserAuth):
         'id': str(uuid4()),
         "username": data.username
     }
-    users_db[data.email] = user    # saving user to database
+    users_db[data.username] = user    # saving user to database
     return UserOut(id=user["id"],
                    email=user["email"],
                    username=user["username"])
@@ -65,3 +64,11 @@ async def get_users():
         }
         for user in users_db.values()
     ]
+
+# @app.get("/me", summary="Get details of currently logged in user",response_model=UserOut)
+# async def get_me(user: str = Depends(get_current_user)):
+#      return {
+#           "User": user 
+#         }
+    
+print(users_db)
