@@ -4,16 +4,16 @@
 ```
 root/
 │
-├── app 
+├── backend 
 │   └── __init__.py
 │   └── app.py                 # our FastAPI app
 │   └── utils.py                # Utility for JWT encoding/decoding
 │   └── schemas.py              # Pydantic models
 │   └── database.py           # Database connection
-│   └── .env                     # Environment file, REMEMBER you have to create this!!
 └── .gitignore 
 └── pyproject.toml         # Project configuration file
-└── README.md 
+└── README.md
+└── .env                     # Environment file, REMEMBER you have to create this!!
 └── requirements.txt 
 └── venv/             # Virtual environment
 ```
